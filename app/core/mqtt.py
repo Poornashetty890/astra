@@ -16,8 +16,6 @@ from PIL import Image
 mqtt_client: mqtt.Client | None = None
 
 
-# ===== MQTT CALLBACKS =====
-
 def on_connect(client, userdata, flags, reason_code, properties=None):
     if reason_code == 0:
         print("[MQTT] Connected to EMQX successfully")
@@ -29,8 +27,6 @@ def on_connect(client, userdata, flags, reason_code, properties=None):
 def on_disconnect(client, userdata, reason_code, properties=None):
     print(f"[MQTT] Disconnected, reason_code={reason_code}")
 
-
-# ===== MQTT CLIENT FACTORY =====
 
 def get_mqtt_client() -> mqtt.Client:
     global mqtt_client
@@ -95,9 +91,6 @@ async def notify_device(device_id: str, version: int):
 
 
 def send_pair_code(device_id: str, passcode: str):
-    """
-    Send pairing passcode to the device
-    """
     msg = json.dumps({
         "type": "pair_request",
         "code": passcode
@@ -107,9 +100,6 @@ def send_pair_code(device_id: str, passcode: str):
 
 
 def send_device_token(device_id: str, token: str):
-    """
-    Send authentication token to the device after pairing verified
-    """
     msg = json.dumps({
         "type": "auth",
         "token": token

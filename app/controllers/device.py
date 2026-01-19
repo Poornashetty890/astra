@@ -36,9 +36,6 @@ async def request_link(device_id: str, curr_user: AstraUser = Depends(get_curren
     }
 
 
-# -----------------------------------------------------------
-# Step 2: Verify passcode → final link
-# -----------------------------------------------------------
 @device_controller.post("/link/verify")
 async def verify_link(device_id: str, code: str, curr_user: AstraUser = Depends(get_current_entity)):
     device = await Astra.find_one(Astra.device_id == device_id)
@@ -49,7 +46,7 @@ async def verify_link(device_id: str, code: str, curr_user: AstraUser = Depends(
     if device.pending_code != code:
         raise HTTPException(401, "Invalid code")
 
-    # Link confirmed
+
     device.user_id = curr_user.user_id
     device.is_linked = True
     token = create_access_token(data={"sub":device.device_id,"role":"device"})
